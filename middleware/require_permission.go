@@ -9,7 +9,7 @@ import (
 
 func RequireAdminSignup(c *gin.Context) {
 	// Obtener la clave personal del administrador
-	adminKey := c.GetHeader("admin-key")
+	adminKey := c.GetHeader("key")
 
 	// Verificar si la clave personal es válida
 	if adminKey != config.AdminKey {

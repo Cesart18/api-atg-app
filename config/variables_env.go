@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"log"
 	"os"
 
@@ -26,7 +25,7 @@ func InitEnvVariables() {
 		log.Fatal("DATABASE_URL not set")
 	}
 
-	ServerPort = os.Getenv("SERVER_PORT")
+	ServerPort = os.Getenv("PORT")
 	if ServerPort == "" {
 		ServerPort = "8080"
 	}
@@ -40,10 +39,5 @@ func InitEnvVariables() {
 	if AdminKey == "" {
 		log.Fatal("ADMINKEY not set")
 	}
-
-	fmt.Println("DATABASE_URL:", DBUrl)
-	fmt.Println("SERVER_PORT:", ServerPort)
-	fmt.Println("SECRET:", Secret)
-	fmt.Println("ADMINKEY:", AdminKey)
 
 }

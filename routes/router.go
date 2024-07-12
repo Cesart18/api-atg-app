@@ -8,6 +8,7 @@ import (
 )
 
 func SetupRouter() *gin.Engine {
+	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
 
 	playerService := services.PlayerService{}
@@ -28,7 +29,7 @@ func SetupRouter() *gin.Engine {
 	}
 	auth := r.Group("/auth")
 	{
-		auth.POST("/signup", middleware.RequireAdminSignup, userController.Signup)
+		auth.POST("/signup", userController.Signup)
 		auth.POST("/login", userController.Login)
 		auth.POST("/logout", userController.Logout)
 		auth.GET("/validate", middleware.RequireAuth, userController.Validate)

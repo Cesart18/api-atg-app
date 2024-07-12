@@ -14,5 +14,5 @@ func init() {
 func main() {
 	r := routes.SetupRouter()
 
-	r.Run()
+	r.Run(":" + config.ServerPort)
 }
