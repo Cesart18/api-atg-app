@@ -8,11 +8,7 @@ import (
 )
 
 var (
-	DBHost     string
-	DBUser     string
-	DBPassword string
-	DBName     string
-	DBPort     string
+	DBUrl      string
 	ServerPort string
 	Secret     string
 	AdminKey   string
@@ -26,11 +22,7 @@ func InitEnvVariables(file string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	DBHost = os.Getenv("DB_HOST")
-	DBUser = os.Getenv("DB_USER")
-	DBPassword = os.Getenv("DB_PASSWORD")
-	DBName = os.Getenv("DB_NAME")
-	DBPort = os.Getenv("DB_PORT")
+	DBUrl = os.Getenv("DATABASE_URL")
 	ServerPort = os.Getenv("SERVER_PORT")
 	Secret = os.Getenv("SECRET")
 	AdminKey = os.Getenv("ADMINKEY")

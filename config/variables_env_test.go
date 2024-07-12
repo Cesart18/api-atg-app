@@ -12,18 +12,10 @@ func TestInitEnvVariables(t *testing.T) {
 
 	config.InitEnvVariables("../.env")
 
-	DBHost := os.Getenv("DB_HOST")
-	DBUser := os.Getenv("DB_USER")
-	DBPassword := os.Getenv("DB_PASSWORD")
-	DBName := os.Getenv("DB_NAME")
-	DBPort := os.Getenv("DB_PORT")
+	DBUrl := os.Getenv("DATABASE_URL")
 	ServerPort := os.Getenv("SERVER_PORT")
 
-	assert.Equal(t, DBHost, config.DBHost)
-	assert.Equal(t, DBUser, config.DBUser)
-	assert.Equal(t, DBPassword, config.DBPassword)
-	assert.Equal(t, DBName, config.DBName)
-	assert.Equal(t, DBPort, config.DBPort)
+	assert.Equal(t, DBUrl, config.DBUrl)
 	assert.Equal(t, ServerPort, config.ServerPort)
 
 }
