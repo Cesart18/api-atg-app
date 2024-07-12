@@ -23,7 +23,22 @@ func InitEnvVariables(file string) {
 		log.Fatal(err)
 	}
 	DBUrl = os.Getenv("DATABASE_URL")
+	if DBUrl == "" {
+		log.Fatal("DATABASE_URL not set")
+	}
+
 	ServerPort = os.Getenv("SERVER_PORT")
+	if ServerPort == "" {
+		ServerPort = "8080"
+	}
+
 	Secret = os.Getenv("SECRET")
+	if Secret == "" {
+		log.Fatal("SECRET not set")
+	}
+
 	AdminKey = os.Getenv("ADMINKEY")
+	if AdminKey == "" {
+		log.Fatal("ADMINKEY not set")
+	}
 }
