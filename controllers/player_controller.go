@@ -12,12 +12,12 @@ import (
 )
 
 type PlayerController struct {
-	UserService services.PlayerServiceInterface
+	PlayerController services.PlayerServiceInterface
 }
 
-func NewUserController(userService services.PlayerServiceInterface) *PlayerController {
+func NewPlayerController(playerController services.PlayerServiceInterface) *PlayerController {
 	return &PlayerController{
-		UserService: userService,
+		PlayerController: playerController,
 	}
 }
 
@@ -30,7 +30,7 @@ func (uc *PlayerController) CreatePlayer(c *gin.Context) {
 		return
 	}
 	user.Name = strings.TrimSpace(user.Name)
-	msg, err := uc.UserService.CreatePlayer(&user)
+	msg, err := uc.PlayerController.CreatePlayer(&user)
 
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, err.Error())
@@ -42,7 +42,7 @@ func (uc *PlayerController) CreatePlayer(c *gin.Context) {
 }
 
 func (uc *PlayerController) GetPlayers(c *gin.Context) {
-	users, err := uc.UserService.GetPlayers()
+	users, err := uc.PlayerController.GetPlayers()
 
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, err.Error())
@@ -59,7 +59,7 @@ func (uc *PlayerController) GetPlayerById(c *gin.Context) {
 		log.Fatal(err)
 	}
 
-	user, err := uc.UserService.GetPlayerById(id)
+	user, err := uc.PlayerController.GetPlayerById(id)
 
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, err.Error())
@@ -76,7 +76,7 @@ func (uc *PlayerController) UpdatePlayer(c *gin.Context) {
 	}
 	name := c.Query("name")
 
-	msg, err := uc.UserService.UpdatePlayer(id, name)
+	msg, err := uc.PlayerController.UpdatePlayer(id, name)
 
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, err.Error())
@@ -97,7 +97,7 @@ func (uc *PlayerController) AddDoublePoint(c *gin.Context) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	user, err := uc.UserService.AddDoublePoint(id, p)
+	user, err := uc.PlayerController.AddDoublePoint(id, p)
 
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, err.Error())
@@ -118,7 +118,7 @@ func (uc *PlayerController) AddSinglePoint(c *gin.Context) {
 		log.Fatal(err)
 	}
 
-	user, err := uc.UserService.AddSinglePoint(id, p)
+	user, err := uc.PlayerController.AddSinglePoint(id, p)
 
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, err.Error())
@@ -134,7 +134,7 @@ func (uc *PlayerController) DeletePlayer(c *gin.Context) {
 		log.Fatal(err)
 	}
 
-	user, err := uc.UserService.DeletePlayer(id)
+	user, err := uc.PlayerController.DeletePlayer(id)
 
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, err.Error())

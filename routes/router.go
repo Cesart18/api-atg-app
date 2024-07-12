@@ -2,6 +2,7 @@ package routes
 
 import (
 	"github.com/cesart18/ranking_app/controllers"
+	"github.com/cesart18/ranking_app/middleware"
 	"github.com/cesart18/ranking_app/services"
 	"github.com/gin-gonic/gin"
 )
@@ -9,18 +10,28 @@ import (
 func SetupRouter() *gin.Engine {
 	r := gin.Default()
 
-	service := services.PlayerService{}
-	controller := controllers.NewUserController(&service)
+	playerService := services.PlayerService{}
+	playerController := controllers.NewPlayerController(&playerService)
+
+	userService := services.UserService{}
+	userController := controllers.NewUserController(&userService)
 
 	api := r.Group("/api")
 	{
-		api.POST("/player", controller.CreatePlayer)
-		api.GET("/players", controller.GetPlayers)
-		api.GET("/player/:id", controller.GetPlayerById)
-		api.PATCH("/player/:id", controller.UpdatePlayer)
-		api.POST("/double_point/:id", controller.AddDoublePoint)
-		api.POST("/single_point/:id", controller.AddSinglePoint)
-		api.DELETE("/player/:id", controller.DeletePlayer)
+		api.POST("/player", playerController.CreatePlayer)
+		api.GET("/players", playerController.GetPlayers)
+		api.GET("/player/:id", playerController.GetPlayerById)
+		api.PATCH("/player/:id", playerController.UpdatePlayer)
+		api.POST("/double_point/:id", playerController.AddDoublePoint)
+		api.POST("/single_point/:id", playerController.AddSinglePoint)
+		api.DELETE("/player/:id", playerController.DeletePlayer)
+	}
+	auth := r.Group("/auth")
+	{
+		auth.POST("/signup", userController.Signup)
+		auth.POST("/login", userController.Login)
+		auth.POST("/logout", userController.Logout)
+		auth.GET("/validate", middleware.RequireAuth, userController.Validate)
 	}
 
 	return r

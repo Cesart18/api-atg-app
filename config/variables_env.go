@@ -14,6 +14,7 @@ var (
 	DBName     string
 	DBPort     string
 	ServerPort string
+	Secret     string
 )
 
 func InitEnvVariables(file string) {
@@ -30,4 +31,5 @@ func InitEnvVariables(file string) {
 	DBName = os.Getenv("DB_NAME")
 	DBPort = os.Getenv("DB_PORT")
 	ServerPort = os.Getenv("SERVER_PORT")
+	Secret = os.Getenv("SECRET")
 }

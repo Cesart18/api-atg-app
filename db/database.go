@@ -2,7 +2,6 @@ package db
 
 import (
 	"fmt"
-	"log"
 
 	env "github.com/cesart18/ranking_app/config"
 	"gorm.io/driver/postgres"
@@ -19,6 +18,6 @@ func InitiDB() {
 	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
 	if err != nil {
-		log.Fatal(err)
+		panic("failed to connect database")
 	}
 }
