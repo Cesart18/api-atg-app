@@ -18,6 +18,16 @@ func NewUserController(userService services.UserServiceInterface) *UserControlle
 	}
 }
 
+// UserController godoc
+// @Summary      Sign up a new user
+// @Description  Create a new user account
+// @Tags         users
+// @Accept       json
+// @Produce      json
+// @Param        user body models.User true "User data"
+// @Success      200  {object}  gin.H
+// @Failure      400  {object}  gin.H
+// @Router       /signup [post]
 func (uc *UserController) Signup(c *gin.Context) {
 
 	var body struct {
@@ -36,9 +46,18 @@ func (uc *UserController) Signup(c *gin.Context) {
 		return
 	}
 	c.IndentedJSON(http.StatusOK, msg)
-
 }
 
+// UserController godoc
+// @Summary      Login a user
+// @Description  Authenticate a user and get a JWT token
+// @Tags         users
+// @Accept       json
+// @Produce      json
+// @Param        user body models.User true "User credentials"
+// @Success      200  {object}  gin.H
+// @Failure      400  {object}  gin.H
+// @Router       /login [post]
 func (uc *UserController) Login(c *gin.Context) {
 	var body struct {
 		Username string `json:"username"`
@@ -60,6 +79,14 @@ func (uc *UserController) Login(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, gin.H{"token": token})
 }
 
+// UserController godoc
+// @Summary      Logout a user
+// @Description  Revoke the user's JWT token and log them out
+// @Tags         users
+// @Produce      json
+// @Success      200  {object}  gin.H
+// @Failure      409  {object}  gin.H
+// @Router       /logout [post]
 func (uc *UserController) Logout(c *gin.Context) {
 
 	token, err := c.Cookie("Authorization")
@@ -82,6 +109,13 @@ func (uc *UserController) Logout(c *gin.Context) {
 
 }
 
+// UserController godoc
+// @Summary      Validate a user
+// @Description  Validate the user's authentication status
+// @Tags         users
+// @Produce      json
+// @Success      200  {object}  gin.H
+// @Router       /validate [get]
 func (uc *UserController) Validate(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, gin.H{
 		"message": "usuario autorizado",
