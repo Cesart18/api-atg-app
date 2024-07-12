@@ -18,7 +18,7 @@ func InitEnvVariables() {
 
 	err := godotenv.Load(".env")
 	if err != nil {
-		log.Fatal(err)
+		log.Println("error en la variable de entorno")
 	}
 	DBUrl = os.Getenv("DATABASE_URL")
 	if DBUrl == "" {
