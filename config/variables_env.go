@@ -14,11 +14,9 @@ var (
 	AdminKey   string
 )
 
-func InitEnvVariables(file string) {
-	if file == "" {
-		file = ".env"
-	}
-	err := godotenv.Load(file)
+func InitEnvVariables() {
+
+	err := godotenv.Load(".env")
 	if err != nil {
 		log.Fatal(err)
 	}
