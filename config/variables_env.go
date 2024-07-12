@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -39,4 +40,10 @@ func InitEnvVariables() {
 	if AdminKey == "" {
 		log.Fatal("ADMINKEY not set")
 	}
+
+	fmt.Println("DATABASE_URL:", DBUrl)
+	fmt.Println("SERVER_PORT:", ServerPort)
+	fmt.Println("SECRET:", Secret)
+	fmt.Println("ADMINKEY:", AdminKey)
+
 }
