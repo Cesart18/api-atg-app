@@ -11,13 +11,15 @@ import (
 )
 
 type PlayerServiceInterface interface {
-	CreatePlayer(u *models.Player) (string, error)
+	CreatePlayer(*models.Player) (string, error)
 	GetPlayers() ([]models.Player, error)
-	GetPlayerById(id int) (models.Player, error)
-	UpdatePlayer(id int, nName string) (string, error)
-	AddDoublePoint(id int, p int) (string, error)
-	AddSinglePoint(id int, p int) (string, error)
-	DeletePlayer(id int) (string, error)
+	GetPlayerById(int) (models.Player, error)
+	UpdatePlayer(int, string) (string, error)
+	AddDoublePoint(int, int) (string, error)
+	AddSinglePoint(int, int) (string, error)
+	ToggleMembership(int) (string, error)
+	TogglePayedBalls(int) (string, error)
+	DeletePlayer(int) (string, error)
 }
 
 type PlayerService struct{}
@@ -117,6 +119,36 @@ func (us *PlayerService) AddSinglePoint(id int, p int) (string, error) {
 	}
 
 	msg := fmt.Sprintf("Puntos totales %d", user.SinglePoints)
+	return msg, nil
+}
+
+func (us *PlayerService) ToggleMembership(id int) (string, error) {
+	var player models.Player
+	r := db.DB.First(&player, id)
+	if r.Error != nil {
+		return "", r.Error
+	}
+	player.IsMembershipValid = !player.IsMembershipValid
+
+	if r := db.DB.Save(&player); r.Error != nil {
+		return "", r.Error
+	}
+
+	msg := fmt.Sprintf("Membresia cambiada a %v", player.IsMembershipValid)
+	return msg, nil
+}
+func (us *PlayerService) TogglePayedBalls(id int) (string, error) {
+	var player models.Player
+	r := db.DB.First(&player, id)
+	if r.Error != nil {
+		return "", r.Error
+	}
+	player.IsPayedBalls = !player.IsPayedBalls
+
+	if r := db.DB.Save(&player); r.Error != nil {
+		return "", r.Error
+	}
+	msg := fmt.Sprintf("Pago de pelotas cambiada a %v", player.IsPayedBalls)
 	return msg, nil
 }
 

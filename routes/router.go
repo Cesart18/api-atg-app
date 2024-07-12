@@ -25,6 +25,9 @@ func SetupRouter() *gin.Engine {
 		api.PATCH("/player/:id", middleware.RequireAuth, playerController.UpdatePlayer)
 		api.POST("/double_point/:id", middleware.RequireAuth, playerController.AddDoublePoint)
 		api.POST("/single_point/:id", middleware.RequireAuth, playerController.AddSinglePoint)
+
+		api.POST("/toggle_membership/:id", middleware.RequireAuth, playerController.ToggleMembership)
+		api.POST("/toggle_payedballs/:id", middleware.RequireAuth, playerController.TogglePayedBalls)
 		api.DELETE("/player/:id", middleware.RequireAuth, playerController.DeletePlayer)
 	}
 	auth := r.Group("/auth")

@@ -21,18 +21,6 @@ func NewPlayerController(playerController services.PlayerServiceInterface) *Play
 	}
 }
 
-// PlayerController godoc
-// @Summary      Create a new player
-// @Description  Create a new player
-// @Tags         players
-// @Accept       json
-// @Produce      json
-// @Param        player body models.Player true "Player data"
-// @Success      200  {object}  models.Player
-// @Failure      400  {object}  gin.H
-// @Failure      500  {object}  gin.H
-// @Router       /players [post]
-
 func (uc *PlayerController) CreatePlayer(c *gin.Context) {
 
 	var user models.Player
@@ -53,15 +41,6 @@ func (uc *PlayerController) CreatePlayer(c *gin.Context) {
 
 }
 
-// PlayerController godoc
-// @Summary      Get all players
-// @Description  Get a list of all players
-// @Tags         players
-// @Produce      json
-// @Success      200  {array}   models.Player
-// @Failure      400  {object}  gin.H
-// @Router       /players [get]
-
 func (uc *PlayerController) GetPlayers(c *gin.Context) {
 	users, err := uc.PlayerController.GetPlayers()
 
@@ -72,15 +51,6 @@ func (uc *PlayerController) GetPlayers(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, users)
 }
 
-// PlayerController godoc
-// @Summary      Get a player by ID
-// @Description  Get a player by their ID
-// @Tags         players
-// @Produce      json
-// @Param        id   path      int  true  "Player ID"
-// @Success      200  {object}  models.Player
-// @Failure      500  {object}  gin.H
-// @Router       /players/{id} [get]
 func (uc *PlayerController) GetPlayerById(c *gin.Context) {
 
 	idParam := c.Param("id")
@@ -98,16 +68,6 @@ func (uc *PlayerController) GetPlayerById(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, user)
 }
 
-// PlayerController godoc
-// @Summary      Update a player
-// @Description  Update a player's name
-// @Tags         players
-// @Produce      json
-// @Param        id    path      int    true  "Player ID"
-// @Param        name  query     string true  "Player name"
-// @Success      200  {object}  gin.H
-// @Failure      400  {object}  gin.H
-// @Router       /players/{id} [put]
 func (uc *PlayerController) UpdatePlayer(c *gin.Context) {
 
 	idParam := c.Param("id")
@@ -126,16 +86,6 @@ func (uc *PlayerController) UpdatePlayer(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, msg)
 }
 
-// PlayerController godoc
-// @Summary      Add double points to a player
-// @Description  Add double points to a player's score
-// @Tags         players
-// @Produce      json
-// @Param        id     path      int    true  "Player ID"
-// @Param        points query     int    true  "Points to add"
-// @Success      200  {object}  models.Player
-// @Failure      400  {object}  gin.H
-// @Router       /players/{id}/double-points [post]
 func (uc *PlayerController) AddDoublePoint(c *gin.Context) {
 
 	idParam := c.Param("id")
@@ -158,16 +108,6 @@ func (uc *PlayerController) AddDoublePoint(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, user)
 }
 
-// PlayerController godoc
-// @Summary      Add single points to a player
-// @Description  Add single points to a player's score
-// @Tags         players
-// @Produce      json
-// @Param        id     path      int    true  "Player ID"
-// @Param        points query     int    true  "Points to add"
-// @Success      200  {object}  models.Player
-// @Failure      400  {object}  gin.H
-// @Router       /players/{id}/single-points [post]
 func (uc *PlayerController) AddSinglePoint(c *gin.Context) {
 
 	idParam := c.Param("id")
@@ -190,15 +130,33 @@ func (uc *PlayerController) AddSinglePoint(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, user)
 }
 
-// PlayerController godoc
-// @Summary      Delete a player
-// @Description  Delete a player by their ID
-// @Tags         players
-// @Produce      json
-// @Param        id   path      int  true  "Player ID"
-// @Success      200  {object}  models.Player
-// @Failure      400  {object}  gin.H
-// @Router       /players/{id} [delete]
+func (uc *PlayerController) ToggleMembership(c *gin.Context) {
+	idParam := c.Param("id")
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		log.Fatal(err)
+	}
+	msg, err := uc.PlayerController.ToggleMembership(id)
+
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, err.Error())
+	}
+	c.IndentedJSON(http.StatusOK, msg)
+}
+
+func (uc *PlayerController) TogglePayedBalls(c *gin.Context) {
+	idParam := c.Param("id")
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		log.Fatal(err)
+	}
+	msg, err := uc.PlayerController.TogglePayedBalls(id)
+
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, err.Error())
+	}
+	c.IndentedJSON(http.StatusOK, msg)
+}
 
 func (uc *PlayerController) DeletePlayer(c *gin.Context) {
 
