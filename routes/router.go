@@ -18,17 +18,17 @@ func SetupRouter() *gin.Engine {
 
 	api := r.Group("/api")
 	{
-		api.POST("/player", playerController.CreatePlayer)
+		api.POST("/player", middleware.RequireAuth, playerController.CreatePlayer)
 		api.GET("/players", playerController.GetPlayers)
 		api.GET("/player/:id", playerController.GetPlayerById)
-		api.PATCH("/player/:id", playerController.UpdatePlayer)
-		api.POST("/double_point/:id", playerController.AddDoublePoint)
-		api.POST("/single_point/:id", playerController.AddSinglePoint)
-		api.DELETE("/player/:id", playerController.DeletePlayer)
+		api.PATCH("/player/:id", middleware.RequireAuth, playerController.UpdatePlayer)
+		api.POST("/double_point/:id", middleware.RequireAuth, playerController.AddDoublePoint)
+		api.POST("/single_point/:id", middleware.RequireAuth, playerController.AddSinglePoint)
+		api.DELETE("/player/:id", middleware.RequireAuth, playerController.DeletePlayer)
 	}
 	auth := r.Group("/auth")
 	{
-		auth.POST("/signup", userController.Signup)
+		auth.POST("/signup", middleware.RequireAdminSignup, userController.Signup)
 		auth.POST("/login", userController.Login)
 		auth.POST("/logout", userController.Logout)
 		auth.GET("/validate", middleware.RequireAuth, userController.Validate)

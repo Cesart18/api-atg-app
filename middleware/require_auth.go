@@ -24,7 +24,7 @@ func RequireAuth(c *gin.Context) {
 	tokenString := strings.TrimPrefix(authHeader, "Bearer ")
 
 	var revokedToken models.RevokedToken
-	db.DB.First(&revokedToken, "token = ?", tokenString)
+	db.DB.Find(&revokedToken, "token = ?", tokenString)
 
 	if revokedToken.ID != 0 {
 		c.AbortWithStatusJSON(http.StatusUnauthorized, "Usuario no autenticado")
@@ -49,7 +49,6 @@ func RequireAuth(c *gin.Context) {
 		}
 
 		c.Set("user", user)
-
 		c.Next()
 	} else {
 		c.AbortWithStatus(http.StatusUnauthorized)
