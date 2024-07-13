@@ -18,16 +18,6 @@ func NewUserController(userService services.UserServiceInterface) *UserControlle
 	}
 }
 
-// UserController godoc
-// @Summary      Sign up a new user
-// @Description  Create a new user account
-// @Tags         users
-// @Accept       json
-// @Produce      json
-// @Param        user body models.User true "User data"
-// @Success      200  {object}  gin.H
-// @Failure      400  {object}  gin.H
-// @Router       /signup [post]
 func (uc *UserController) Signup(c *gin.Context) {
 
 	var body struct {
@@ -48,16 +38,6 @@ func (uc *UserController) Signup(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, msg)
 }
 
-// UserController godoc
-// @Summary      Login a user
-// @Description  Authenticate a user and get a JWT token
-// @Tags         users
-// @Accept       json
-// @Produce      json
-// @Param        user body models.User true "User credentials"
-// @Success      200  {object}  gin.H
-// @Failure      400  {object}  gin.H
-// @Router       /login [post]
 func (uc *UserController) Login(c *gin.Context) {
 	var body struct {
 		Username string `json:"username"`
@@ -74,7 +54,7 @@ func (uc *UserController) Login(c *gin.Context) {
 		return
 	}
 	c.SetSameSite(http.SameSiteLaxMode)
-	c.SetCookie("Authorization", token, 3600*24, "", "", false, true)
+	c.SetCookie("Authorization", token, 3600*24, "/", "", false, true)
 
 	c.IndentedJSON(http.StatusOK, gin.H{"token": token})
 }
@@ -95,19 +75,11 @@ func (uc *UserController) Logout(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusConflict, err.Error())
 		return
 	}
-
-	c.SetCookie("Authorization", "", -1, "", "", false, true)
+	c.SetCookie("Authorization", "", -1, "/", "", false, true)
 	c.IndentedJSON(http.StatusOK, gin.H{"message": msg})
 
 }
 
-// UserController godoc
-// @Summary      Validate a user
-// @Description  Validate the user's authentication status
-// @Tags         users
-// @Produce      json
-// @Success      200  {object}  gin.H
-// @Router       /validate [get]
 func (uc *UserController) Validate(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, gin.H{
 		"message": "usuario autorizado",
