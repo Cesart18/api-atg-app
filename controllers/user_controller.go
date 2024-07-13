@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"os"
 
 	"github.com/cesart18/ranking_app/models"
 	"github.com/cesart18/ranking_app/services"
@@ -53,8 +54,13 @@ func (uc *UserController) Login(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusBadRequest, err.Error())
 		return
 	}
+	domain := os.Getenv("COOKIE_DOMAIN")
+	if domain == "" {
+		domain = "" // Dejar vacío para permitir acceso desde cualquier dominio
+	}
+
 	c.SetSameSite(http.SameSiteLaxMode)
-	c.SetCookie("Authorization", token, 3600*24, "/", "", false, true)
+	c.SetCookie("Authorization", token, 3600*24, "/", domain, false, true)
 
 	c.IndentedJSON(http.StatusOK, gin.H{"token": token})
 }
@@ -75,7 +81,12 @@ func (uc *UserController) Logout(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusConflict, err.Error())
 		return
 	}
-	c.SetCookie("Authorization", "", -1, "/", "", false, true)
+	domain := os.Getenv("COOKIE_DOMAIN")
+	if domain == "" {
+		domain = "" // Dejar vacío para permitir acceso desde cualquier dominio
+	}
+
+	c.SetCookie("Authorization", "", -1, "/", domain, false, true)
 	c.IndentedJSON(http.StatusOK, gin.H{"message": msg})
 
 }
