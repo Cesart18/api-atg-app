@@ -1,15 +1,32 @@
 package routes
 
 import (
+	"os"
+	"strings"
+	"time"
+
 	"github.com/cesart18/ranking_app/controllers"
 	"github.com/cesart18/ranking_app/middleware"
 	"github.com/cesart18/ranking_app/services"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
 func SetupRouter() *gin.Engine {
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
+
+	allowedOrigins := os.Getenv("CORS_ALLOWED_ORIGINS")
+	origins := strings.Split(allowedOrigins, ",")
+
+	r.Use(cors.New(cors.Config{
+		AllowOrigins:     origins,
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
 
 	playerService := services.PlayerService{}
 	playerController := controllers.NewPlayerController(&playerService)

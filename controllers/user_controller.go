@@ -79,20 +79,12 @@ func (uc *UserController) Login(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, gin.H{"token": token})
 }
 
-// UserController godoc
-// @Summary      Logout a user
-// @Description  Revoke the user's JWT token and log them out
-// @Tags         users
-// @Produce      json
-// @Success      200  {object}  gin.H
-// @Failure      409  {object}  gin.H
-// @Router       /logout [post]
 func (uc *UserController) Logout(c *gin.Context) {
 
 	token, err := c.Cookie("Authorization")
 
 	if err != nil {
-		c.AbortWithStatus(http.StatusConflict)
+		c.AbortWithStatusJSON(http.StatusConflict, err.Error())
 		return
 	}
 	t := models.RevokedToken{
