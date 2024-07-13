@@ -18,15 +18,15 @@ func SetupRouter() *gin.Engine {
 
 	allowedOrigins := os.Getenv("CORS_ALLOWED_ORIGINS")
 	origins := strings.Split(allowedOrigins, ",")
-
-	r.Use(cors.New(cors.Config{
+	config := cors.Config{
 		AllowOrigins:     origins,
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
 		ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: true,
 		MaxAge:           12 * time.Hour,
-	}))
+	}
+	r.Use(cors.New(config))
 
 	playerService := services.PlayerService{}
 	playerController := controllers.NewPlayerController(&playerService)

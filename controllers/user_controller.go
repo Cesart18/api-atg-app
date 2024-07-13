@@ -60,7 +60,7 @@ func (uc *UserController) Login(c *gin.Context) {
 	}
 
 	c.SetSameSite(http.SameSiteLaxMode)
-	c.SetCookie("Authorization", token, 3600*24, "/", domain, false, true)
+	c.SetCookie("Authorization", token, 3600*24, "", "", true, true)
 
 	c.IndentedJSON(http.StatusOK, gin.H{"token": token})
 }
@@ -86,7 +86,7 @@ func (uc *UserController) Logout(c *gin.Context) {
 		domain = "" // Dejar vacío para permitir acceso desde cualquier dominio
 	}
 
-	c.SetCookie("Authorization", "", -1, "/", domain, false, true)
+	c.SetCookie("Authorization", "", -1, "", "", true, true)
 	c.IndentedJSON(http.StatusOK, gin.H{"message": msg})
 
 }
