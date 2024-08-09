@@ -48,11 +48,11 @@ func (us *UserService) Login(username, password string) (string, error) {
 	}
 	err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("credentials invalid")
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"sub": user.ID,
-		"exp": time.Now().Add(time.Hour * 24).Unix(),
+		"exp": time.Now().Add(time.Hour * 8).Unix(),
 	})
 	tokenString, err := token.SignedString([]byte(config.Secret))
 

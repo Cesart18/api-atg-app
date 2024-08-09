@@ -59,8 +59,8 @@ func (uc *UserController) Login(c *gin.Context) {
 		domain = "" // Dejar vacío para permitir acceso desde cualquier dominio
 	}
 
-	c.SetSameSite(http.SameSiteLaxMode)
-	c.SetCookie("Authorization", token, 3600*24, "", "", true, true)
+	// c.SetSameSite(http.SameSiteLaxMode)
+	// c.SetCookie("Authorization", token, 3600*24, "", "", true, true)
 
 	c.IndentedJSON(http.StatusOK, gin.H{"token": token})
 }
@@ -81,12 +81,7 @@ func (uc *UserController) Logout(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusConflict, err.Error())
 		return
 	}
-	domain := os.Getenv("COOKIE_DOMAIN")
-	if domain == "" {
-		domain = "" // Dejar vacío para permitir acceso desde cualquier dominio
-	}
 
-	c.SetCookie("Authorization", "", -1, "", "", true, true)
 	c.IndentedJSON(http.StatusOK, gin.H{"message": msg})
 
 }

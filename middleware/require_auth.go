@@ -18,7 +18,7 @@ func RequireAuth(c *gin.Context) {
 	authHeader := c.GetHeader("authorization")
 
 	if authHeader == "" {
-		c.AbortWithStatus(http.StatusUnauthorized)
+		c.AbortWithStatusJSON(http.StatusUnauthorized, "Usuario no autenticado")
 	}
 
 	tokenString := strings.TrimPrefix(authHeader, "Bearer ")
@@ -38,19 +38,19 @@ func RequireAuth(c *gin.Context) {
 
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
 		if float64(time.Now().Unix()) > claims["exp"].(float64) {
-			c.AbortWithStatus(http.StatusUnauthorized)
+			c.AbortWithStatusJSON(http.StatusUnauthorized, "Usuario no autenticado")
 		}
 		id := claims["sub"]
 		var user models.User
 		db.DB.First(&user, id)
 
 		if user.ID == 0 {
-			c.AbortWithStatus(http.StatusUnauthorized)
+			c.AbortWithStatusJSON(http.StatusUnauthorized, "Usuario no autenticado")
 		}
 
 		c.Set("user", user)
 		c.Next()
 	} else {
-		c.AbortWithStatus(http.StatusUnauthorized)
+		c.AbortWithStatusJSON(http.StatusUnauthorized, "Usuario no autenticado")
 	}
 }
