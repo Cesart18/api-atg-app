@@ -2,8 +2,9 @@ package controllers
 
 import (
 	"net/http"
-	"os"
+	"strings"
 
+	"github.com/cesart18/ranking_app/db"
 	"github.com/cesart18/ranking_app/models"
 	"github.com/cesart18/ranking_app/services"
 	"github.com/gin-gonic/gin"
@@ -54,27 +55,29 @@ func (uc *UserController) Login(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusBadRequest, err.Error())
 		return
 	}
-	domain := os.Getenv("COOKIE_DOMAIN")
-	if domain == "" {
-		domain = "" // Dejar vacío para permitir acceso desde cualquier dominio
-	}
-
-	// c.SetSameSite(http.SameSiteLaxMode)
-	// c.SetCookie("Authorization", token, 3600*24, "", "", true, true)
 
 	c.IndentedJSON(http.StatusOK, gin.H{"token": token})
 }
 
 func (uc *UserController) Logout(c *gin.Context) {
 
-	token, err := c.Cookie("Authorization")
+	authHeader := c.GetHeader("authorization")
 
-	if err != nil {
-		c.AbortWithStatusJSON(http.StatusConflict, err.Error())
-		return
+	if authHeader == "" {
+		c.AbortWithStatusJSON(http.StatusUnauthorized, "Usuario no autenticado")
 	}
+
+	tokenString := strings.TrimPrefix(authHeader, "Bearer ")
+
+	var revokedToken models.RevokedToken
+	db.DB.Find(&revokedToken, "token = ?", tokenString)
+
+	if revokedToken.ID != 0 {
+		c.AbortWithStatusJSON(http.StatusUnauthorized, "Usuario no autenticado")
+	}
+
 	t := models.RevokedToken{
-		Token: token,
+		Token: tokenString,
 	}
 	msg, err := uc.UserService.Logout(t)
 	if err != nil {
