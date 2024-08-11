@@ -11,6 +11,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type PlayerIDsRequest struct {
+	PlayerIDs []int  `json:"ids"`
+	Score     string `json:"score"`
+}
 type PlayerController struct {
 	PlayerController services.PlayerServiceInterface
 }
@@ -56,16 +60,16 @@ func (uc *PlayerController) GetPlayerById(c *gin.Context) {
 	idParam := c.Param("id")
 	id, err := strconv.Atoi(idParam)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 
-	user, err := uc.PlayerController.GetPlayerById(id)
+	player, err := uc.PlayerController.GetPlayerById(id)
 
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, err.Error())
 		return
 	}
-	c.IndentedJSON(http.StatusOK, user)
+	c.IndentedJSON(http.StatusOK, player)
 }
 
 func (uc *PlayerController) UpdatePlayer(c *gin.Context) {
@@ -84,50 +88,6 @@ func (uc *PlayerController) UpdatePlayer(c *gin.Context) {
 		return
 	}
 	c.IndentedJSON(http.StatusOK, msg)
-}
-
-func (uc *PlayerController) AddDoublePoint(c *gin.Context) {
-
-	idParam := c.Param("id")
-	id, err := strconv.Atoi(idParam)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	pointParam := c.Query("points")
-	p, err := strconv.Atoi(pointParam)
-	if err != nil {
-		log.Fatal(err)
-	}
-	user, err := uc.PlayerController.AddDoublePoint(id, p)
-
-	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, err.Error())
-		return
-	}
-	c.IndentedJSON(http.StatusOK, user)
-}
-
-func (uc *PlayerController) AddSinglePoint(c *gin.Context) {
-
-	idParam := c.Param("id")
-	id, err := strconv.Atoi(idParam)
-	if err != nil {
-		log.Fatal(err)
-	}
-	pointParam := c.Query("points")
-	p, err := strconv.Atoi(pointParam)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	user, err := uc.PlayerController.AddSinglePoint(id, p)
-
-	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, err.Error())
-		return
-	}
-	c.IndentedJSON(http.StatusOK, user)
 }
 
 func (uc *PlayerController) ToggleMembership(c *gin.Context) {
@@ -173,4 +133,22 @@ func (uc *PlayerController) DeletePlayer(c *gin.Context) {
 		return
 	}
 	c.IndentedJSON(http.StatusOK, user)
+}
+
+func (uc *PlayerController) AddMatch(c *gin.Context) {
+
+	var request PlayerIDsRequest
+
+	if err := c.BindJSON(&request); err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	msg, err := uc.PlayerController.AddMatch(request.PlayerIDs, request.Score)
+
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, err.Error())
+		return
+	}
+	c.IndentedJSON(http.StatusOK, msg)
 }
