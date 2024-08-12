@@ -199,7 +199,7 @@ func (us *PlayerService) AddMatch(ids []int, score string) (string, error) {
 
 	match := models.Match{
 		Score:        score,
-		Date:         formatDate(time.Now()),
+		Date:         time.Now().UTC().String(),
 		MatchType:    getMatchType(len(ids)),
 		MatchPlayers: matchPlayers,
 	}
@@ -241,8 +241,4 @@ func IndexOf[T comparable](slice []T, value T) int {
 		}
 	}
 	return -1 // Retorna -1 si no se encuentra el valor
-}
-
-func formatDate(t time.Time) string {
-	return t.Format("2006-01-02") // Formato: YYYY-MM-DD
 }
